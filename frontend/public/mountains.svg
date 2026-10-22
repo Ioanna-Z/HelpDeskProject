@@ -1,0 +1,43 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1200 300"
+     preserveAspectRatio="xMidYMid slice">
+
+  <defs>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c4b8ef"/>
+      <stop offset="100%" stop-color="#e9e7fc"/>
+    </linearGradient>
+
+    <linearGradient id="middle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8eb8ee"/>
+      <stop offset="100%" stop-color="#d8e6fc"/>
+    </linearGradient>
+
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9b9de0"/>
+      <stop offset="100%" stop-color="#e4e5fb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Distant mountains -->
+  <path d="M0 230 L110 170 L180 195 L320 85
+           L450 205 L560 125 L700 220
+           L820 90 L940 195 L1070 115
+           L1200 210 L1200 300 L0 300 Z"
+        fill="url(#far)" opacity="0.55"/>
+
+  <!-- Middle mountain range -->
+  <path d="M0 270 L160 200 L250 225 L390 110
+           L510 220 L650 150 L760 235
+           L930 75 L1080 210 L1200 145
+           L1200 300 L0 300 Z"
+        fill="url(#middle)" opacity="0.72"/>
+
+  <!-- Front mountain range -->
+  <path d="M0 300 L140 250 L270 280 L440 170
+           L590 270 L730 205 L850 265
+           L1020 150 L1200 255 L1200 300 Z"
+        fill="url(#front)" opacity="0.65"/>
+
+</svg>

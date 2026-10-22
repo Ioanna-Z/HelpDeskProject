@@ -1,0 +1,522 @@
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+main {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  color: #4546a5;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: 0 0 8px;
+  letter-spacing: -1px;
+}
+
+main > p {
+  color: #737da8;
+  margin-bottom: 40px;
+}
+
+section {
+  margin-top: 30px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #d9dcfa;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(75, 77, 140, 0.07);
+}
+
+h2 {
+  margin-top: 0;
+  color: #5550a7;
+  font-size: 1.4rem;
+}
+
+section:first-of-type p {
+  display: inline-block;
+  margin: 8px 12px 8px 0;
+  padding: 18px;
+  border: 1px solid #dce0fa;
+  border-radius: 12px;
+  background: #f8f9ff;
+  color: #4546a5;
+  font-weight: 600;
+}
+
+article {
+  margin-top: 14px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e0e4f7;
+  border-left: 3px solid #9c8add;
+  border-radius: 12px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+article:hover {
+  border-color: #80cde8;
+  transform: translateY(-2px);
+}
+
+article h3 {
+  color: #151a3d;
+  margin: 0 0 12px;
+}
+
+article p {
+  color: #667095;
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 24px 14px;
+  }
+
+  section {
+    padding: 18px;
+  }
+
+  section:first-of-type p {
+    display: block;
+    margin-right: 0;
+  }
+}
+
+
+/* Dashboard header */
+
+.dashboard-header {
+  padding: 12px 0 28px;
+}
+
+.eyebrow {
+  color: #6256bd;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.dashboard-header h1 {
+  margin-top: 12px;
+  color: #151a3d;
+}
+
+.dashboard-header p {
+  color: #737da8;
+  font-size: 1.05rem;
+}
+
+/* Overview cards */
+
+.overview-section {
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #dce0fa;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(75, 77, 140, 0.06);
+}
+
+.stat-label {
+  color: #667095;
+  font-size: 0.95rem;
+}
+
+.stat-value {
+  color: #151a3d;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.stat-card.total {
+  border-top: 3px solid #79cfe9;
+}
+
+.stat-card.open {
+  border-top: 3px solid #c482b2;
+}
+
+.stat-card.progress {
+  border-top: 3px solid #9c8add;
+}
+
+.stat-card.resolved {
+  border-top: 3px solid #69c6c9;
+}
+
+/* Tickets section */
+
+.tickets-section {
+  margin-top: 26px;
+}
+
+.section-description {
+  color: #737da8;
+  margin-top: -8px;
+  margin-bottom: 24px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 850px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ticket search */
+
+.ticket-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.ticket-toolbar input {
+  width: min(100%, 320px);
+  padding: 13px 16px;
+  border: 1px solid #d9dcfa;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #151a3d;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ticket-toolbar input:focus {
+  border-color: #9c8add;
+  box-shadow: 0 0 0 3px rgba(156, 138, 221, 0.15);
+}
+
+.ticket-toolbar input::placeholder {
+  color: #8b92b1;
+}
+
+
+/* Search and filter toolbar */
+
+.ticket-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.ticket-toolbar select {
+  padding: 13px 16px;
+  border: 1px solid #d9dcfa;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #4546a5;
+  cursor: pointer;
+  outline: none;
+}
+
+.ticket-toolbar select:focus {
+  border-color: #9c8add;
+  box-shadow: 0 0 0 3px rgba(156, 138, 221, 0.15);
+}
+
+@media (max-width: 600px) {
+  .ticket-toolbar {
+    flex-direction: column;
+  }
+
+  .ticket-toolbar input,
+  .ticket-toolbar select {
+    width: 100%;
+  }
+}
+
+
+/* Mountain header */
+
+.dashboard-header {
+  position: relative;
+  min-height: 230px;
+  padding: 24px 0 50px;
+  background-image: url("/mountains.svg");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 75% auto;
+}
+
+.dashboard-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .dashboard-header {
+    min-height: 220px;
+    background-size: 115% auto;
+    background-position: center bottom;
+  }
+}
+
+
+/* Ticket table */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tickets-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  text-align: left;
+}
+
+.tickets-table th {
+  padding: 14px 16px;
+  color: #737da8;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: #f2f4ff;
+}
+
+.tickets-table td {
+  padding: 18px 16px;
+  background: #ffffff;
+  border-top: 1px solid #e0e4f7;
+  border-bottom: 1px solid #e0e4f7;
+  color: #667095;
+  white-space: nowrap;
+}
+
+.tickets-table td:first-child {
+  border-left: 3px solid #9c8add;
+  border-radius: 10px 0 0 10px;
+}
+
+.tickets-table td:last-child {
+  border-right: 1px solid #e0e4f7;
+  border-radius: 0 10px 10px 0;
+}
+
+.tickets-table tr:hover td {
+  background: #fafaff;
+}
+
+.ticket-title {
+  color: #151a3d !important;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.category-badge {
+  color: #4268bc;
+  background: #eaf2ff;
+}
+
+.priority-high {
+  color: #b34d8c;
+  background: #faeaf4;
+}
+
+.priority-medium {
+  color: #a76b25;
+  background: #fff3e5;
+}
+
+.priority-low {
+  color: #258a75;
+  background: #e7f8f1;
+}
+
+.status-open {
+  color: #bf5266;
+  background: #fff0f2;
+}
+
+.status-in-progress {
+  color: #6e53bb;
+  background: #f0ebff;
+}
+
+.status-resolved {
+  color: #258a75;
+  background: #e7f8f1;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 24px;
+  color: #737da8;
+}
+
+
+.new-ticket-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #6256bd;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 12px 0;
+}
+
+.new-ticket-button:hover {
+  background: #4e43a3;
+}
+
+.form-placeholder {
+  padding: 18px;
+  background: #f3f0ff;
+  border: 1px solid #d9dcfa;
+  border-radius: 10px;
+  color: #5550a7;
+}
+
+
+/* Create ticket form */
+
+.ticket-form {
+  margin: 18px 0 26px;
+  padding: 24px;
+  background: #f8f7ff;
+  border: 1px solid #dedaf6;
+  border-radius: 16px;
+}
+
+.ticket-form h3 {
+  margin: 0 0 22px;
+  color: #4546a5;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.form-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4546a5;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  padding: 12px 14px;
+  background: white;
+  border: 1px solid #d9dcfa;
+  border-radius: 10px;
+  color: #151a3d;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid #9c8add;
+  outline-offset: 1px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.create-ticket-button,
+.cancel-button {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-ticket-button {
+  background: #6256bd;
+  color: white;
+  border: 1px solid #6256bd;
+}
+
+.create-ticket-button:hover {
+  background: #4e43a3;
+}
+
+.cancel-button {
+  background: white;
+  color: #6256bd;
+  border: 1px solid #d9dcfa;
+}
+
+.cancel-button:hover {
+  background: #eeebff;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* Editable ticket status */
+
+.status-select {
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline-offset: 2px;
+}
+
+.status-select:focus-visible {
+  outline: 2px solid #6256bd;
+}
