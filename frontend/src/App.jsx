@@ -1,10 +1,17 @@
 
-import { useState } from "react";
-import { initialTickets } from "./data/tickets";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [tickets, setTickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState([]);
+
+    useEffect(() => {
+      fetch("http://127.0.0.1:8000/tickets")
+        .then((response) => response.json())
+        .then((data) => setTickets(data))
+        .catch((error) => console.error("Error fetching tickets:", error));
+    }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
