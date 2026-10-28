@@ -57,7 +57,8 @@ function App() {
   ];
 
   
-function handleCreateTicket(event) {
+
+async function handleCreateTicket(event) {
   event.preventDefault();
 
   if (!newTicket.title.trim()) {
@@ -65,34 +66,75 @@ function handleCreateTicket(event) {
     return;
   }
 
-  const ticket = {
-    id: Math.max(0, ...tickets.map((item) => item.id)) + 1,
-    title: newTicket.title.trim(),
-    category: newTicket.category,
-    priority: newTicket.priority,
-    status: "Open",
-  };
+  try {
+    const response = await fetch("http://127.0.0.1:8000/tickets", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: newTicket.title.trim(),
+        category: newTicket.category,
+        priority: newTicket.priority,
+      }),
+    });
 
-  setTickets((previousTickets) => [...previousTickets, ticket]);
+    if (!response.ok) {
+      throw new Error("Failed to create ticket");
+    }
 
-  setNewTicket({
-    title: "",
-    category: "Email",
-    priority: "Medium",
-  });
+    const createdTicket = await response.json();
 
-  setShowForm(false);
+    setTickets((previousTickets) => [
+      ...previousTickets,
+      createdTicket,
+    ]);
+
+    setNewTicket({
+      title: "",
+      category: "Email",
+      priority: "Medium",
+    });
+
+    setShowForm(false);
+  } catch (error) {
+    console.error("Error creating ticket:", error);
+    alert("Could not create ticket. Please try again.");
+  }
 }
 
 
-function handleStatusChange(ticketId, newStatus) {
-  setTickets((previousTickets) =>
-    previousTickets.map((ticket) =>
-      ticket.id === ticketId
-        ? { ...ticket, status: newStatus }
-        : ticket
-    )
-  );
+
+async function handleStatusChange(ticketId, newStatus) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/tickets/${ticketId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to update ticket status");
+    }
+
+    const updatedTicket = await response.json();
+
+    setTickets((previousTickets) =>
+      previousTickets.map((ticket) =>
+        ticket.id === ticketId ? updatedTicket : ticket
+      )
+    );
+  } catch (error) {
+    console.error("Error updating ticket:", error);
+    alert("Could not update ticket status.");
+  }
 }
 
 

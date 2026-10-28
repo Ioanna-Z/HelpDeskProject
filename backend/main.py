@@ -1,8 +1,23 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from database import Base, engine 
+import models
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from database import SessionLocal
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +33,10 @@ class TicketCreate(BaseModel):
     category: str
     priority: str
 
+ 
+class TicketStatusUpdate(BaseModel):
+    status: str
+   
 
 @app.get("/")
 def home():
@@ -25,51 +44,57 @@ def home():
 
 
 
+
 @app.get("/tickets")
-def get_tickets():
-    return [
-        {
-            "id": 1,
-            "title": "Cannot access company email",
-            "category": "Email",
-            "priority": "High",
-            "status": "Open"
-        },
-        {
-            "id": 2,
-            "title": "Printer not responding",
-            "category": "Hardware",
-            "priority": "Medium",
-            "status": "In Progress"
-        },
-        {
-            "id": 3,
-            "title": "Password reset request",
-            "category": "Account",
-            "priority": "Low",
-            "status": "Resolved"
-        },
-        {
-            "id": 4,
-            "title": "VPN connection issue",
-            "category": "Network",
-            "priority": "High",
-            "status": "Open"
-        }
-    ]
+def get_tickets(db: Session = Depends(get_db)):
+    return db.query(models.Ticket).all()
+
+
 
 
 @app.post("/tickets", status_code=201)
-def create_ticket(ticket: TicketCreate):
-    tickets = get_tickets()
+def create_ticket(
+    ticket: TicketCreate,
+    db: Session = Depends(get_db)
+):
+    new_ticket = models.Ticket(
+        title=ticket.title,
+        category=ticket.category,
+        priority=ticket.priority,
+        status="Open"
+    )
 
-    new_ticket = {
-        "id": max(t["id"] for t in tickets) + 1,
-        "title": ticket.title,
-        "category": ticket.category,
-        "priority": ticket.priority,
-        "status": "Open"
-    }
+    db.add(new_ticket)
+    db.commit()
+    db.refresh(new_ticket)
 
-    tickets.append(new_ticket)
     return new_ticket
+
+
+@app.patch("/tickets/{ticket_id}")
+def update_ticket_status(
+    ticket_id: int,
+    update: TicketStatusUpdate,
+    db: Session = Depends(get_db)
+):
+    ticket = db.query(models.Ticket).filter(
+        models.Ticket.id == ticket_id
+    ).first()
+
+    if ticket is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found"
+        )
+
+    if update.status not in ["Open", "In Progress", "Resolved"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid ticket status"
+        )
+
+    ticket.status = update.status
+    db.commit()
+    db.refresh(ticket)
+
+    return ticket
