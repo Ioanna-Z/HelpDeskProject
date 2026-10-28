@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+/* Base layout */
 
 #root {
   width: 100%;
@@ -11,24 +14,10 @@ main {
 }
 
 h1 {
+  margin: 0 0 8px;
   color: #4546a5;
   font-size: clamp(2rem, 5vw, 3.5rem);
-  margin: 0 0 8px;
   letter-spacing: -1px;
-}
-
-main > p {
-  color: #737da8;
-  margin-bottom: 40px;
-}
-
-section {
-  margin-top: 30px;
-  padding: 28px;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid #d9dcfa;
-  border-radius: 18px;
-  box-shadow: 0 8px 30px rgba(75, 77, 140, 0.07);
 }
 
 h2 {
@@ -37,15 +26,17 @@ h2 {
   font-size: 1.4rem;
 }
 
-section:first-of-type p {
-  display: inline-block;
-  margin: 8px 12px 8px 0;
-  padding: 18px;
-  border: 1px solid #dce0fa;
-  border-radius: 12px;
-  background: #f8f9ff;
-  color: #4546a5;
-  font-weight: 600;
+main > p {
+  margin-bottom: 40px;
+  color: #737da8;
+}
+
+section {
+  margin-top: 30px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #d9dcfa;
+  box-shadow: 0 8px 30px rgba(75, 77, 140, 0.07);
 }
 
 article {
@@ -54,7 +45,6 @@ article {
   background: #ffffff;
   border: 1px solid #e0e4f7;
   border-left: 3px solid #9c8add;
-  border-radius: 12px;
   transition: border-color 0.2s, transform 0.2s;
 }
 
@@ -64,36 +54,31 @@ article:hover {
 }
 
 article h3 {
-  color: #151a3d;
   margin: 0 0 12px;
+  color: #151a3d;
 }
 
 article p {
-  color: #667095;
   margin: 6px 0;
+  color: #667095;
   font-size: 0.95rem;
 }
-
-@media (max-width: 600px) {
-  main {
-    padding: 24px 14px;
-  }
-
-  section {
-    padding: 18px;
-  }
-
-  section:first-of-type p {
-    display: block;
-    margin-right: 0;
-  }
-}
-
 
 /* Dashboard header */
 
 .dashboard-header {
-  padding: 12px 0 28px;
+  position: relative;
+  min-height: 230px;
+  padding: 24px 0 50px;
+  background-image: url("/mountains.svg");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 75% auto;
+}
+
+.dashboard-header > * {
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow {
@@ -136,7 +121,6 @@ article p {
   padding: 24px;
   background: #ffffff;
   border: 1px solid #dce0fa;
-  border-radius: 18px;
   box-shadow: 0 8px 24px rgba(75, 77, 140, 0.06);
 }
 
@@ -174,45 +158,42 @@ article p {
 }
 
 .section-description {
-  color: #737da8;
   margin-top: -8px;
   margin-bottom: 24px;
+  color: #737da8;
 }
 
-/* Responsive layout */
-
-@media (max-width: 850px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Ticket search */
+/* Search and filters */
 
 .ticket-toolbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
+  gap: 12px;
   margin-bottom: 20px;
+}
+
+.ticket-toolbar input,
+.ticket-toolbar select {
+  padding: 13px 16px;
+  border: 1px solid #d9dcfa;
+  background: #ffffff;
+  outline: none;
 }
 
 .ticket-toolbar input {
   width: min(100%, 320px);
-  padding: 13px 16px;
-  border: 1px solid #d9dcfa;
-  border-radius: 12px;
-  background: #ffffff;
   color: #151a3d;
-  outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.ticket-toolbar input:focus {
+.ticket-toolbar select {
+  color: #4546a5;
+  cursor: pointer;
+}
+
+.ticket-toolbar input:focus,
+.ticket-toolbar select:focus {
   border-color: #9c8add;
   box-shadow: 0 0 0 3px rgba(156, 138, 221, 0.15);
 }
@@ -220,69 +201,6 @@ article p {
 .ticket-toolbar input::placeholder {
   color: #8b92b1;
 }
-
-
-/* Search and filter toolbar */
-
-.ticket-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.ticket-toolbar select {
-  padding: 13px 16px;
-  border: 1px solid #d9dcfa;
-  border-radius: 12px;
-  background: #ffffff;
-  color: #4546a5;
-  cursor: pointer;
-  outline: none;
-}
-
-.ticket-toolbar select:focus {
-  border-color: #9c8add;
-  box-shadow: 0 0 0 3px rgba(156, 138, 221, 0.15);
-}
-
-@media (max-width: 600px) {
-  .ticket-toolbar {
-    flex-direction: column;
-  }
-
-  .ticket-toolbar input,
-  .ticket-toolbar select {
-    width: 100%;
-  }
-}
-
-
-/* Mountain header */
-
-.dashboard-header {
-  position: relative;
-  min-height: 230px;
-  padding: 24px 0 50px;
-  background-image: url("/mountains.svg");
-  background-repeat: no-repeat;
-  background-position: right bottom;
-  background-size: 75% auto;
-}
-
-.dashboard-header > * {
-  position: relative;
-  z-index: 1;
-}
-
-@media (max-width: 600px) {
-  .dashboard-header {
-    min-height: 220px;
-    background-size: 115% auto;
-    background-position: center bottom;
-  }
-}
-
 
 /* Ticket table */
 
@@ -318,12 +236,10 @@ article p {
 
 .tickets-table td:first-child {
   border-left: 3px solid #9c8add;
-  border-radius: 10px 0 0 10px;
 }
 
 .tickets-table td:last-child {
   border-right: 1px solid #e0e4f7;
-  border-radius: 0 10px 10px 0;
 }
 
 .tickets-table tr:hover td {
@@ -335,10 +251,11 @@ article p {
   font-weight: 600;
 }
 
+/* Ticket badges */
+
 .badge {
   display: inline-block;
   padding: 7px 12px;
-  border-radius: 9px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -379,21 +296,21 @@ article p {
 }
 
 .empty-message {
-  text-align: center;
   padding: 24px;
   color: #737da8;
+  text-align: center;
 }
 
+/* New ticket button */
 
 .new-ticket-button {
+  margin: 12px 0;
   padding: 12px 20px;
   border: none;
-  border-radius: 10px;
   background: #6256bd;
-  color: white;
+  color: #ffffff;
   font-weight: 600;
   cursor: pointer;
-  margin: 12px 0;
 }
 
 .new-ticket-button:hover {
@@ -404,10 +321,8 @@ article p {
   padding: 18px;
   background: #f3f0ff;
   border: 1px solid #d9dcfa;
-  border-radius: 10px;
   color: #5550a7;
 }
-
 
 /* Create ticket form */
 
@@ -416,7 +331,6 @@ article p {
   padding: 24px;
   background: #f8f7ff;
   border: 1px solid #dedaf6;
-  border-radius: 16px;
 }
 
 .ticket-form h3 {
@@ -427,24 +341,23 @@ article p {
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   flex: 1;
   min-width: 0;
+  gap: 8px;
 }
 
 .form-field label {
+  color: #4546a5;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #4546a5;
 }
 
 .form-field input,
 .form-field select {
   width: 100%;
   padding: 12px 14px;
-  background: white;
+  background: #ffffff;
   border: 1px solid #d9dcfa;
-  border-radius: 10px;
   color: #151a3d;
 }
 
@@ -469,14 +382,13 @@ article p {
 .create-ticket-button,
 .cancel-button {
   padding: 12px 20px;
-  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .create-ticket-button {
   background: #6256bd;
-  color: white;
+  color: #ffffff;
   border: 1px solid #6256bd;
 }
 
@@ -485,7 +397,7 @@ article p {
 }
 
 .cancel-button {
-  background: white;
+  background: #ffffff;
   color: #6256bd;
   border: 1px solid #d9dcfa;
 }
@@ -494,7 +406,80 @@ article p {
   background: #eeebff;
 }
 
+/* Editable ticket status */
+
+.status-select {
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline-offset: 2px;
+}
+
+.status-select:focus-visible {
+  outline: 2px solid #6256bd;
+}
+
+/* Delete ticket button */
+
+.delete-button {
+  padding: 9px 14px;
+  background: #873d58;
+  color: #ffffff;
+  border: 1px solid #873d58;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background: #692c43;
+}
+
+.delete-button:focus-visible {
+  outline: 2px solid #6256bd;
+  outline-offset: 2px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 850px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
+  main {
+    padding: 24px 14px;
+  }
+
+  section {
+    padding: 18px;
+  }
+
+  section:first-of-type p {
+    display: block;
+    margin-right: 0;
+  }
+
+  .dashboard-header {
+    min-height: 220px;
+    background-size: 115% auto;
+    background-position: center bottom;
+  }
+
+  .ticket-toolbar {
+    flex-direction: column;
+  }
+
+  .ticket-toolbar input,
+  .ticket-toolbar select {
+    width: 100%;
+  }
+
   .form-row {
     flex-direction: column;
   }
@@ -504,19 +489,8 @@ article p {
   }
 }
 
-
-/* Editable ticket status */
-
-.status-select {
-  padding: 8px 10px;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  outline-offset: 2px;
-}
-
-.status-select:focus-visible {
-  outline: 2px solid #6256bd;
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 }

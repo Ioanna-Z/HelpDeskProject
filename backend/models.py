@@ -1,10 +1,9 @@
-
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
 
-
+# Database model for support tickets
 class Ticket(Base):
     __tablename__ = "tickets"
 

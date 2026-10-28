@@ -1,16 +1,18 @@
-
+/* Global typography and colors */
 :root {
-  font-family: Inter, Arial, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   color: #151a3d;
   background: #f7f8ff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 
+/* Consistent element sizing */
 * {
   box-sizing: border-box;
 }
 
+/* Page background */
 body {
   margin: 0;
   min-width: 320px;
@@ -21,6 +23,7 @@ body {
     #f7f8ff;
 }
 
+/* Inherit the global font in form controls */
 button,
 input,
 select,

@@ -2,16 +2,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+const API_URL = "http://127.0.0.1:8000";
+
 function App() {
+  // Ticket data and dashboard controls
   const [tickets, setTickets] = useState([]);
-
-    useEffect(() => {
-      fetch("http://127.0.0.1:8000/tickets")
-        .then((response) => response.json())
-        .then((data) => setTickets(data))
-        .catch((error) => console.error("Error fetching tickets:", error));
-    }, []);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -23,6 +18,20 @@ function App() {
     priority: "Medium",
   });
 
+  // Load tickets from the backend when the dashboard opens
+  useEffect(() => {
+    fetch(`${API_URL}/tickets`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+        return response.json();
+      })
+      .then((data) => setTickets(data))
+      .catch((error) => console.error("Error fetching tickets:", error));
+  }, []);
+
+  // Calculate dashboard statistics
   const openTickets = tickets.filter(
     (ticket) => ticket.status === "Open"
   ).length;
@@ -35,18 +44,19 @@ function App() {
     (ticket) => ticket.status === "Resolved"
   ).length;
 
+  // Apply search and filters to the ticket list
   const filteredTickets = tickets.filter((ticket) => {
-  const matchesSearch = ticket.title
-    .toLowerCase()
-    .includes(searchTerm.toLowerCase());
+    const matchesSearch = ticket.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
 
-  const matchesCategory =
-    categoryFilter === "All" || ticket.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "All" || ticket.category === categoryFilter;
 
-  const matchesStatus =
-    statusFilter === "All" || ticket.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || ticket.status === statusFilter;
 
-  return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const stats = [
@@ -56,60 +66,56 @@ function App() {
     { label: "Resolved", value: resolvedTickets, type: "resolved" },
   ];
 
-  
+  // Create a ticket and save it to the database
+  async function handleCreateTicket(event) {
+    event.preventDefault();
 
-async function handleCreateTicket(event) {
-  event.preventDefault();
-
-  if (!newTicket.title.trim()) {
-    alert("Please enter a ticket title.");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://127.0.0.1:8000/tickets", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: newTicket.title.trim(),
-        category: newTicket.category,
-        priority: newTicket.priority,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create ticket");
+    if (!newTicket.title.trim()) {
+      alert("Please enter a ticket title.");
+      return;
     }
 
-    const createdTicket = await response.json();
+    try {
+      const response = await fetch(`${API_URL}/tickets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTicket.title.trim(),
+          category: newTicket.category,
+          priority: newTicket.priority,
+        }),
+      });
 
-    setTickets((previousTickets) => [
-      ...previousTickets,
-      createdTicket,
-    ]);
+      if (!response.ok) {
+        throw new Error("Failed to create ticket");
+      }
 
-    setNewTicket({
-      title: "",
-      category: "Email",
-      priority: "Medium",
-    });
+      const createdTicket = await response.json();
 
-    setShowForm(false);
-  } catch (error) {
-    console.error("Error creating ticket:", error);
-    alert("Could not create ticket. Please try again.");
+      setTickets((previousTickets) => [
+        ...previousTickets,
+        createdTicket,
+      ]);
+
+      setNewTicket({
+        title: "",
+        category: "Email",
+        priority: "Medium",
+      });
+
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      alert("Could not create ticket. Please try again.");
+    }
   }
-}
 
-
-
-async function handleStatusChange(ticketId, newStatus) {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/tickets/${ticketId}`,
-      {
+  // Update a ticket's status in the database
+  async function handleStatusChange(ticketId, newStatus) {
+    try {
+      const response = await fetch(`${API_URL}/tickets/${ticketId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -117,67 +123,63 @@ async function handleStatusChange(ticketId, newStatus) {
         body: JSON.stringify({
           status: newStatus,
         }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update ticket status");
       }
+
+      const updatedTicket = await response.json();
+
+      setTickets((previousTickets) =>
+        previousTickets.map((ticket) =>
+          ticket.id === ticketId ? updatedTicket : ticket
+        )
+      );
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+      alert("Could not update ticket status.");
+    }
+  }
+
+  // Delete a ticket after user confirmation
+  async function handleDeleteTicket(ticketId) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this ticket?"
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to update ticket status");
+    if (!confirmed) {
+      return;
     }
 
-    const updatedTicket = await response.json();
-
-    setTickets((previousTickets) =>
-      previousTickets.map((ticket) =>
-        ticket.id === ticketId ? updatedTicket : ticket
-      )
-    );
-  } catch (error) {
-    console.error("Error updating ticket:", error);
-    alert("Could not update ticket status.");
-  }
-}
-
-
-async function handleDeleteTicket(ticketId) {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this ticket?"
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/tickets/${ticketId}`,
-      {
+    try {
+      const response = await fetch(`${API_URL}/tickets/${ticketId}`, {
         method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete ticket");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete ticket");
+      setTickets((previousTickets) =>
+        previousTickets.filter((ticket) => ticket.id !== ticketId)
+      );
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+      alert("Could not delete ticket. Please try again.");
     }
-
-    setTickets((previousTickets) =>
-      previousTickets.filter((ticket) => ticket.id !== ticketId)
-    );
-  } catch (error) {
-    console.error("Error deleting ticket:", error);
-    alert("Could not delete ticket. Please try again.");
   }
-}
-
-
 
   return (
     <main>
+      {/* Dashboard header */}
       <header className="dashboard-header">
         <span className="eyebrow">HELPDESKPROJECT</span>
         <h1>IT Support Dashboard</h1>
         <p>Manage, track and resolve support tickets efficiently.</p>
       </header>
 
+      {/* Ticket statistics */}
       <section className="overview-section">
         <div className="stats-grid">
           {stats.map((stat) => (
@@ -191,7 +193,7 @@ async function handleDeleteTicket(ticketId) {
 
       <section className="tickets-section">
         <h2>Support Tickets</h2>
-        
+
         <button
           type="button"
           className="new-ticket-button"
@@ -200,7 +202,7 @@ async function handleDeleteTicket(ticketId) {
           + New Ticket
         </button>
 
-        
+        {/* New ticket form */}
         {showForm && (
           <form className="ticket-form" onSubmit={handleCreateTicket}>
             <h3>Create New Ticket</h3>
@@ -277,12 +279,11 @@ async function handleDeleteTicket(ticketId) {
           </form>
         )}
 
-
         <p className="section-description">
           View and manage all support requests.
         </p>
 
-        
+        {/* Search and filter controls */}
         <div className="ticket-toolbar">
           <input
             type="search"
@@ -316,8 +317,7 @@ async function handleDeleteTicket(ticketId) {
           </select>
         </div>
 
-
-        
+        {/* Ticket table */}
         <div className="table-container">
           <table className="tickets-table">
             <thead>
@@ -348,7 +348,7 @@ async function handleDeleteTicket(ticketId) {
                       {ticket.priority}
                     </span>
                   </td>
-                  
+
                   <td>
                     <select
                       aria-label={`Change status for ticket ${ticket.id}`}
@@ -363,7 +363,6 @@ async function handleDeleteTicket(ticketId) {
                       <option value="Open">Open</option>
                       <option value="In Progress">In Progress</option>
                       <option value="Resolved">Resolved</option>
-                    
                     </select>
                   </td>
 
@@ -377,7 +376,6 @@ async function handleDeleteTicket(ticketId) {
                     </button>
                   </td>
                 </tr>
-
               ))}
             </tbody>
           </table>
@@ -388,7 +386,6 @@ async function handleDeleteTicket(ticketId) {
             </p>
           )}
         </div>
-
       </section>
     </main>
   );

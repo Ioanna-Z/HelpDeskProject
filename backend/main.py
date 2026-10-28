@@ -1,16 +1,17 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from database import Base, engine 
-import models
 from sqlalchemy.orm import Session
-from fastapi import Depends
-from database import SessionLocal
+
+import models
+from database import Base, engine, SessionLocal
 
 app = FastAPI()
+
+# Create database tables if they do not exist
 Base.metadata.create_all(bind=engine)
 
-
+# Provide a database session for each request
 def get_db():
     db = SessionLocal()
     try:
@@ -18,7 +19,7 @@ def get_db():
     finally:
         db.close()
 
-
+# Allow requests from the React development server
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -27,31 +28,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+# Request schemas
 class TicketCreate(BaseModel):
     title: str
     category: str
     priority: str
 
- 
+
 class TicketStatusUpdate(BaseModel):
     status: str
-   
 
 @app.get("/")
 def home():
     return {"message": "HelpDeskProject API is running"}
 
-
-
-
+# Retrieve all tickets
 @app.get("/tickets")
 def get_tickets(db: Session = Depends(get_db)):
     return db.query(models.Ticket).all()
 
-
-
-
+# Create a new ticket
 @app.post("/tickets", status_code=201)
 def create_ticket(
     ticket: TicketCreate,
@@ -70,7 +66,7 @@ def create_ticket(
 
     return new_ticket
 
-
+# Update an existing ticket's status
 @app.patch("/tickets/{ticket_id}")
 def update_ticket_status(
     ticket_id: int,
@@ -99,7 +95,7 @@ def update_ticket_status(
 
     return ticket
 
-
+# Delete an existing ticket
 @app.delete("/tickets/{ticket_id}", status_code=204)
 def delete_ticket(
     ticket_id: int,
