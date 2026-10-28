@@ -138,6 +138,37 @@ async function handleStatusChange(ticketId, newStatus) {
 }
 
 
+async function handleDeleteTicket(ticketId) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this ticket?"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/tickets/${ticketId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete ticket");
+    }
+
+    setTickets((previousTickets) =>
+      previousTickets.filter((ticket) => ticket.id !== ticketId)
+    );
+  } catch (error) {
+    console.error("Error deleting ticket:", error);
+    alert("Could not delete ticket. Please try again.");
+  }
+}
+
+
 
   return (
     <main>
@@ -296,6 +327,7 @@ async function handleStatusChange(ticketId, newStatus) {
                 <th>Category</th>
                 <th>Priority</th>
                 <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
 
@@ -331,10 +363,21 @@ async function handleStatusChange(ticketId, newStatus) {
                       <option value="Open">Open</option>
                       <option value="In Progress">In Progress</option>
                       <option value="Resolved">Resolved</option>
+                    
                     </select>
                   </td>
 
+                  <td>
+                    <button
+                      type="button"
+                      className="delete-button"
+                      onClick={() => handleDeleteTicket(ticket.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
+
               ))}
             </tbody>
           </table>
